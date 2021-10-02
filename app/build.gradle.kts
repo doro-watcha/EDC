@@ -4,10 +4,35 @@
 
 plugins {
     id("edc.kotlin-application-conventions")
+    id("kotlin-parcelize")
+    id("kotlin-kapt")
+}
+
+buildscript { 
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10")
+    }
+
 }
 
 dependencies {
     implementation("org.apache.commons:commons-text")
+    implementation ("org.jetbrains.kotlin:kotlin-stdlib:$1.5.10")
+
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.squareup.retrofit2:adapter-rxjava2:2.7.1")
+
+    // okhttp
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.9.0")
+    implementation ("com.squareup.okhttp3:okhttp:4.9.0")
+
+    implementation ("io.reactivex.rxjava2:rxkotlin:2.4.0")
+    implementation ("io.reactivex.rxjava2:rxjava:2.2.15")
+
     implementation(project(":utilities"))
 }
 

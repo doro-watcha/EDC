@@ -3,12 +3,26 @@
  */
 package edc.app
 
+import edc.app.data.api.ApiModule
+import edc.app.data.api.ThingListResponse
 import edc.utilities.StringUtils
 
-import org.apache.commons.text.WordUtils
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 fun main() {
-    val tokens = StringUtils.split(MessageUtils.getMessage())
-    val result = StringUtils.join(tokens)
-    println(WordUtils.capitalize(result))
+
+    ApiModule.thingAPI.listThings("C000000003").enqueue(object: Callback<ThingListResponse>{
+        override fun onResponse(call: Call<ThingListResponse>, response: Response<ThingListResponse>) {
+            println(response)
+        }
+
+        override fun onFailure(call: Call<ThingListResponse>, t: Throwable) {
+            println(t)
+        }
+
+    })
+
 }
+
