@@ -5,6 +5,11 @@ package edc.app
 
 import edc.app.data.api.ApiModule
 import edc.app.data.api.ThingListResponse
+import edc.app.data.model.User
+import edc.app.util.AppPreference
+import edc.app.util.AppPreference.AUTH_TOKEN
+import edc.app.util.AppPreference.USER_ID
+import edc.app.util.AppPreference.USER_PASSWORD
 import edc.utilities.StringUtils
 
 import retrofit2.Call
@@ -13,16 +18,33 @@ import retrofit2.Response
 
 fun main() {
 
-    ApiModule.thingAPI.listThings("C000000003").enqueue(object: Callback<ThingListResponse>{
+    val body = HashMap<String, String>()
+    body["userId"] = USER_ID
+    body["userPassword"] = USER_PASSWORD
+    val request = ApiModule.authAPI.userLogin(body)
+    println(request)
+    request.enqueue(object : Callback<User>{
+        override fun onResponse(call: Call<User>, response: Response<User>) {
+            AUTH_TOKEN = "UL " + response.body()?.authToken.orEmpty()
+        }
+
+        override fun onFailure(call: Call<User>, t: Throwable) {
+            println(t.message)
+        }
+
+    })
+
+    ApiModule.thingAPI.listThings("C000000003").enqueue( object : Callback<ThingListResponse> {
         override fun onResponse(call: Call<ThingListResponse>, response: Response<ThingListResponse>) {
             println(response)
         }
 
         override fun onFailure(call: Call<ThingListResponse>, t: Throwable) {
-            println(t)
+            TODO("Not yet implemented")
         }
 
     })
+
 
 }
 

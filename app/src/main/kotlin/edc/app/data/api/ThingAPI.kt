@@ -8,9 +8,6 @@ import java.io.Serializable
 
 interface ThingAPI {
 
-    /**
-     * Email Sign Up
-     */
     @GET("v1.0/sites/{siteId}/things")
     fun listThings(
         @Path("siteId") siteId : String
