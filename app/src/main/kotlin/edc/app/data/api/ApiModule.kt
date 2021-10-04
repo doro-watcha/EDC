@@ -1,12 +1,20 @@
 package edc.app.data.api
 
-import edc.app.network.NetworkModule
+import edc.app.data.api.ditto.DittoThingAPI
+import edc.app.network.ditto.DittoRetrofit
+import edc.app.network.edc.EdcRetrofit
 
 object ApiModule {
 
-    val network = NetworkModule.retrofit
+    private val edc = EdcRetrofit.retrofit
 
-    val thingAPI = network.create(ThingAPI::class.java)
+    val thingAPI = edc.create(ThingAPI::class.java)
 
-    val authAPI = network.create(AuthAPI::class.java)
+    val authAPI = edc.create(AuthAPI::class.java)
+
+    private val ditto = DittoRetrofit.retrofit
+
+    val dittoThingAPI = ditto.create(DittoThingAPI::class.java)
+
+
 }

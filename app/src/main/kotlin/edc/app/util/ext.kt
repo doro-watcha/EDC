@@ -12,7 +12,7 @@ fun<T> Call<T>.responseTo(callback: CallBackKt<T>.() -> Unit) {
 
 class CallBackKt<T>: Callback<T> {
 
-    var onResponse: ((T) -> Unit) = {}
+    var onResponse: ((T?) -> Unit) = {}
     var onFailure: ((t: Throwable?) -> Unit)? = null
 
     override fun onFailure(call: Call<T>, t: Throwable) {
@@ -20,7 +20,7 @@ class CallBackKt<T>: Callback<T> {
     }
 
     override fun onResponse(call: Call<T>, response: Response<T>) {
-        onResponse.invoke(response.body()!!)
+        onResponse.invoke(response.body())
     }
 
 }
