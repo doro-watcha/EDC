@@ -6,7 +6,9 @@ plugins {
     id("edc.kotlin-application-conventions")
     id("kotlin-parcelize")
     id("kotlin-kapt")
+    id("com.palantir.docker") version "0.30.0"
 }
+
 
 buildscript { 
     repositories {
@@ -14,9 +16,16 @@ buildscript {
     }
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10")
+        classpath ("com.palantir.gradle.docker:gradle-docker:0.30.0")
     }
 
 }
+
+docker {
+    name = ("edc-too-ditto:1.0.0")
+}
+
+apply(plugin = "com.palantir.docker")
 
 dependencies {
     implementation("org.apache.commons:commons-text")
