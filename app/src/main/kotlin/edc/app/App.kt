@@ -10,11 +10,22 @@ import edc.app.data.model.kafka.KafkaRecordRequest
 import edc.app.util.AppPreference.AUTH_TOKEN
 import edc.app.util.AppPreference.USER_ID
 import edc.app.util.AppPreference.USER_PASSWORD
+import edc.app.util.disposedBy
 import edc.app.util.responseTo
+import edc.app.util.rxRepeatTimer
+import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 
+private val compositeDisposable = CompositeDisposable()
 fun main() {
 
     fetchAuthToken()
+
+    rxRepeatTimer(5000L,{
+        fetchAuthToken()
+    }).disposedBy(compositeDisposable)
 }
 
 /**
