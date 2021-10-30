@@ -12,7 +12,6 @@ interface ThingAPI {
     fun listThings(
         @Path("siteId") siteId : String
     ) : Call<ThingListResponse>
-
 }
 
 

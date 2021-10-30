@@ -1,16 +1,15 @@
-package edc.app.network.edc
+package edc.app.network.kafka
 
-import edc.app.util.AppPreference
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-object EdcRetrofit {
+object KafkaRetrofit {
 
-    private val BASE_URL = "http://210.97.42.250:8088"
+    private val BASE_URL = "http://127.0.0.1:9092"
     private val CONNECT_TIMEOUT = 15L
     private val WRITE_TIMEOUT = 15L
     private val READ_TIMEOUT = 15L
@@ -18,7 +17,6 @@ object EdcRetrofit {
 
     val interceptor = Interceptor { chain ->
         chain.proceed(chain.request().newBuilder().apply {
-            addHeader("X-CSRF-TOKEN", AppPreference.AUTH_TOKEN)
         }.build())
     }
 
@@ -34,10 +32,10 @@ object EdcRetrofit {
     }.build()
 
     val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(client)
-            .build()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .client(client)
+        .build()
 
 
 
