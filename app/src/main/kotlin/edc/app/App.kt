@@ -3,6 +3,8 @@
  */
 package edc.app
 
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import edc.app.data.api.ApiModule
 import edc.app.data.model.*
 import edc.app.data.model.kafka.KafkaRecord
@@ -16,16 +18,31 @@ import edc.app.util.rxRepeatTimer
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.util.concurrent.TimeUnit
 
 private val compositeDisposable = CompositeDisposable()
 fun main() {
 
-    fetchAuthToken()
+    val path = Paths.get("edcSetting.json")
 
-    rxRepeatTimer(5000L,{
+    try {
+        val jsonString = Files.readString(path).trimIndent()
+        val json = JsonParser.parseString(jsonString).asJsonObject
+        val duration = json["duration"].toString().toLong()
+
         fetchAuthToken()
-    }).disposedBy(compositeDisposable)
+
+        rxRepeatTimer(duration * 1000L,{
+            fetchAuthToken()
+        }).disposedBy(compositeDisposable)
+    } catch ( e : IOException){
+
+    }
+
+
 }
 
 /**

@@ -29,6 +29,7 @@ apply(plugin = "com.palantir.docker")
 
 dependencies {
     implementation("org.apache.commons:commons-text")
+    implementation("com.google.code.gson:gson:2.8.8")
     implementation ("org.jetbrains.kotlin:kotlin-stdlib:$1.5.10")
 
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
