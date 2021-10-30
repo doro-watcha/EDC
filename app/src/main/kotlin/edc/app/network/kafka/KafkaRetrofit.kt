@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
 
 object KafkaRetrofit {
 
-    private val BASE_URL = "http://127.0.0.1:9092"
+    private val BASE_URL = "http://localhost:8082"
     private val CONNECT_TIMEOUT = 15L
     private val WRITE_TIMEOUT = 15L
     private val READ_TIMEOUT = 15L
@@ -17,6 +17,9 @@ object KafkaRetrofit {
 
     val interceptor = Interceptor { chain ->
         chain.proceed(chain.request().newBuilder().apply {
+            addHeader("Accept","application/vnd.kafka.v2+json")
+            addHeader("Content-Type","application/vnd.kafka.json.v2+json")
+
         }.build())
     }
 

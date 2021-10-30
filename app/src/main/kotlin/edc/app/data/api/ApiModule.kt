@@ -3,8 +3,14 @@ package edc.app.data.api
 import edc.app.data.api.ditto.DittoThingAPI
 import edc.app.network.ditto.DittoRetrofit
 import edc.app.network.edc.EdcRetrofit
+import edc.app.network.kafka.KafkaRetrofit
 
 object ApiModule {
+
+    /**
+     *
+     * EDC API
+     */
 
     private val edc = EdcRetrofit.retrofit
 
@@ -12,9 +18,22 @@ object ApiModule {
 
     val authAPI = edc.create(AuthAPI::class.java)
 
+    /**
+     *
+     * Ditto API
+     */
+
     private val ditto = DittoRetrofit.retrofit
 
     val dittoThingAPI = ditto.create(DittoThingAPI::class.java)
+
+
+    /**
+     * Kafka API
+     */
+    private val kafka = KafkaRetrofit.retrofit
+
+    val kafkaAPI = kafka.create(KafkaAPI::class.java)
 
 
 }

@@ -4,24 +4,25 @@
 package edc.app
 
 import edc.app.data.api.ApiModule
-import edc.app.data.api.ThingListResponse
 import edc.app.data.model.*
-import edc.app.util.AppPreference
+import edc.app.data.model.kafka.KafkaRecord
+import edc.app.data.model.kafka.KafkaRecordRequest
 import edc.app.util.AppPreference.AUTH_TOKEN
 import edc.app.util.AppPreference.USER_ID
 import edc.app.util.AppPreference.USER_PASSWORD
 import edc.app.util.responseTo
-import edc.utilities.StringUtils
-
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 fun main() {
 
-    /**
-     * API 날리기전 Auth API
-     */
+    fetchAuthToken()
+}
+
+/**
+ * API 날리기전 Auth API
+ */
+
+fun fetchAuthToken() {
+
     val body = HashMap<String, String>()
     body["userId"] = USER_ID
     body["userPassword"] = USER_PASSWORD
@@ -33,12 +34,22 @@ fun main() {
             listThings()
         }
     }
-
-
 }
 
 fun listThings() {
     ApiModule.thingAPI.listThings("C000000003").responseTo {
+        onResponse = {
+            if ( it?.things?.get(0) != null) insertToKafka(it.things[0])
+        }
+    }
+
+}
+
+fun insertToKafka( thing : Thing) {
+
+    val kafkaRecordRequest = KafkaRecordRequest(records = listOf(KafkaRecord(value = thing )))
+
+    ApiModule.kafkaAPI.insertToTopic("doro",kafkaRecordRequest,"application/vnd.kafka.v2+json","application/vnd.kafka.json.v2+json").responseTo {
         onResponse = {
 
         }
