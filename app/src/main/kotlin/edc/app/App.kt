@@ -37,12 +37,10 @@ fun main() {
 
         rxRepeatTimer(duration * 1000L,{
             fetchAuthToken()
-        }).disposedBy(compositeDisposable)
+        },duration * 1000L).disposedBy(compositeDisposable)
     } catch ( e : IOException){
 
     }
-
-
 }
 
 /**
@@ -67,17 +65,20 @@ fun fetchAuthToken() {
 fun listThings() {
     ApiModule.thingAPI.listThings("C000000003").responseTo {
         onResponse = {
-            if ( it?.things?.get(0) != null) insertToKafka(it.things[0])
+            if ( it?.things?.get(0) != null) {
+                insertToKafka(it.things[0], "doro2")
+                insertToKafka(it.things[0],"doro_test")
+            }
         }
     }
 
 }
 
-fun insertToKafka( thing : Thing) {
+fun insertToKafka( thing : Thing, topic : String) {
 
     val kafkaRecordRequest = KafkaRecordRequest(records = listOf(KafkaRecord(value = thing )))
 
-    ApiModule.kafkaAPI.insertToTopic("doro",kafkaRecordRequest,"application/vnd.kafka.v2+json","application/vnd.kafka.json.v2+json").responseTo {
+    ApiModule.kafkaAPI.insertToTopic(topic,kafkaRecordRequest,"application/vnd.kafka.v2+json","application/vnd.kafka.json.v2+json").responseTo {
         onResponse = {
 
         }
