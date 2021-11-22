@@ -15,20 +15,12 @@ object KafkaRetrofit {
     private val READ_TIMEOUT = 15L
 
 
-    val interceptor = Interceptor { chain ->
-        chain.proceed(chain.request().newBuilder().apply {
-            addHeader("Accept","application/vnd.kafka.v2+json")
-            addHeader("Content-Type","application/vnd.kafka.json.v2+json")
-
-        }.build())
-    }
 
     val client = OkHttpClient.Builder().apply {
         connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
         readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
         writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
         retryOnConnectionFailure(true)
-        addInterceptor(interceptor)
         addInterceptor(HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         })

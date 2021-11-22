@@ -38,6 +38,7 @@ fun main() {
 //        val siteId = Gson().fromJson(edcSetting["siteId"], String::class.java)
 
         fetchAuthToken()
+        listTopicForTest()
     } catch (e: IOException) {
 
     }
@@ -95,3 +96,14 @@ fun insertToKafka(thing: Thing, topic: String) {
 
 }
 
+
+fun listTopicForTest() {
+
+    ApiModule.kafkaAPI.listTopics().responseTo {
+        onResponse = {
+            it?.forEach { topic ->
+                print("$topic ")
+            }
+        }
+    }
+}
