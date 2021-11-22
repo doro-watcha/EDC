@@ -10,7 +10,7 @@ plugins {
 }
 
 
-buildscript { 
+buildscript {
     repositories {
         mavenCentral()
     }
