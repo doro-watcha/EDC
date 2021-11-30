@@ -10,17 +10,26 @@ import java.io.Serializable
 interface ThingAPI {
 
     @GET("v1.0/sites/{siteId}/things/{thingName}/attrs")
-    fun listThings(
+    fun fetchThingAttrs(
         @Path("siteId") siteId : String,
         @Path("thingName") thingName : String
-    ) : Call<ThingListResponse>
+    ) : Call<ThingAttrsResponse>
 }
 
 
-data class ThingListResponse(
+data class ThingAttrsResponse(
     @SerializedName("thingName")
-    val thingName : String,
+    val thingName : String?,
 
     @SerializedName("attrs")
-    val attrs : List<Attr>
+    val attrs : List<Attr>?,
+
+    @SerializedName("code")
+    val code : String,
+
+    @SerializedName("message")
+    val message : String,
+
+    @SerializedName("createdAt")
+    val createdAt : String
 ) : Serializable

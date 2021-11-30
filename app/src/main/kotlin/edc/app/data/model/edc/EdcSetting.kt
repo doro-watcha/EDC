@@ -6,9 +6,12 @@ import java.io.Serializable
 
 data class EdcSetting(
 
-    @SerializedName("siteId")
-    val siteId: String,
+    @SerializedName("thingName")
+    val thingName : String,
 
-    @SerializedName("thingList")
-    val thingList: EdcThingList
+    @SerializedName("thingDuration")
+    val thingDuration : Int,
+
+    @SerializedName("dbName")
+    val dbName : String
 ) : Serializable

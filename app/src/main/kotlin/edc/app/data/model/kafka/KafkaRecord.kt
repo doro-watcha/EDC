@@ -7,5 +7,5 @@ import java.io.Serializable
 data class KafkaRecord(
 
     @SerializedName("value")
-    val value: Thing
+    val value: String
 ) : Serializable
