@@ -104,7 +104,7 @@ fun fetchEdcData ( thingName : String, siteId : String , topic : String  ) {
                 if ( ( it?.attrs?.size ?: 0 ) > 0 && (it?.attrs?.get(0)?.attrValueList?.size ?: 0 ) > 0 ) {
                     data = it?.attrs?.get(0)?.attrValueList?.get(0)?.attrValue.orEmpty()
                 }
-                //insertToKafka(data, topic)
+                insertToKafka(data, topic)
             }
         }
         onFailure = {
