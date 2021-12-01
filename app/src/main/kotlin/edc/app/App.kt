@@ -20,20 +20,15 @@ import edc.app.util.responseTo
 import edc.app.util.rxRepeatTimer
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
+import java.io.FileReader
 import java.io.IOException
-import java.nio.file.Files
-import java.nio.file.Paths
-import java.util.concurrent.TimeUnit
 
 private val compositeDisposable = CompositeDisposable()
 
-var tryNumber = 0
 fun main() {
 
-    val path = Paths.get("edcSetting.json")
-
     try {
-        val jsonString = Files.readString(path).trimIndent()
+        val jsonString = FileReader("edcSetting.json").readText()
         val edcSetting  = JsonParser.parseString(jsonString).asJsonObject
 
         val edcThingList = Gson().fromJson(edcSetting["thingList"] , EdcThingList::class.java)
@@ -42,7 +37,7 @@ fun main() {
         /**
          * 쓰레드 생성을 위한 Null API Request
          */
-        fetchAuthToken("","","")
+        fetchEdcData("","","")
 
         edcThingList.thingList.forEach{ setting ->
             rxRepeatTimer(setting.thingDuration * 1L,{
@@ -77,17 +72,21 @@ fun fetchEdcData ( thingName : String, siteId : String , topic : String  ) {
     ApiModule.thingAPI.fetchThingAttrs( siteId , thingName).responseTo {
         onResponse = {
             println(it)
-            if ( it == null) {
+            if ( it?.code == "401") {
+                println("RKWMDK!!")
                 fetchAuthToken(thingName, siteId, topic)
             }
             else {
                 var data = "NULL_DATA"
 
-                if ( ( it.attrs?.size ?: 0 ) > 0 && (it.attrs?.get(0)?.attrValueList?.size ?: 0 ) > 0 ) {
-                    data = it.attrs?.get(0)?.attrValueList?.get(0)?.attrValue.orEmpty()
+                if ( ( it?.attrs?.size ?: 0 ) > 0 && (it?.attrs?.get(0)?.attrValueList?.size ?: 0 ) > 0 ) {
+                    data = it?.attrs?.get(0)?.attrValueList?.get(0)?.attrValue.orEmpty()
                 }
-                insertToKafka(data, topic)
+                //insertToKafka(data, topic)
             }
+        }
+        onFailure = {
+            println("FUCK!!!")
         }
     }
 

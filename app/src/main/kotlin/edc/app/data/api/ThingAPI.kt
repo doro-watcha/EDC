@@ -19,17 +19,17 @@ interface ThingAPI {
 
 data class ThingAttrsResponse(
     @SerializedName("thingName")
-    val thingName : String?,
+    val thingName : String? = null,
 
     @SerializedName("attrs")
-    val attrs : List<Attr>?,
+    val attrs : List<Attr>? = null ,
 
     @SerializedName("code")
-    val code : String,
+    val code : String? = null ,
 
     @SerializedName("message")
-    val message : String,
+    val message : String? = null ,
 
     @SerializedName("createdAt")
-    val createdAt : String
+    val createdAt : String? = null
 ) : Serializable
