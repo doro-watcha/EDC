@@ -37,13 +37,9 @@ fun main() {
         /**
          * 쓰레드 생성을 위한 Null API Request
          */
-        fetchEdcData("","","")
+        initToken(edcThingList,siteId)
 
-        edcThingList.thingList.forEach{ setting ->
-            rxRepeatTimer(setting.thingDuration * 1L,{
-                fetchEdcData(setting.thingName, siteId, setting.dbName )
-            }).disposedBy(compositeDisposable)
-        }
+
     } catch (e: IOException) {
         println(e)
         println(e.message)
@@ -54,6 +50,31 @@ fun main() {
 /**
  * API 날리기전 Auth API
  */
+
+fun initToken ( edcThingList : EdcThingList, siteId : String ) {
+    val body = HashMap<String, String>()
+    body["userId"] = USER_ID
+    body["userPassword"] = USER_PASSWORD
+    val request = ApiModule.authAPI.userLogin(body)
+    request.responseTo {
+        onResponse = {
+            AUTH_TOKEN = "UL " + it?.authToken
+
+            pollingServer(edcThingList,siteId)
+        }
+    }
+
+}
+
+fun pollingServer(edcThingList : EdcThingList, siteId : String ) {
+
+    edcThingList.thingList.forEach{ setting ->
+        rxRepeatTimer(setting.thingDuration * 1L,{
+            fetchEdcData(setting.thingName, siteId, setting.dbName )
+        }).disposedBy(compositeDisposable)
+    }
+
+}
 
 fun fetchAuthToken( thingName : String , siteId : String , topic : String  ) {
 
@@ -75,7 +96,6 @@ fun fetchEdcData ( thingName : String, siteId : String , topic : String  ) {
         onResponse = {
             println(it)
             if ( it?.code == "401") {
-                println("RKWMDK!!")
                 fetchAuthToken(thingName, siteId, topic)
             }
             else {
