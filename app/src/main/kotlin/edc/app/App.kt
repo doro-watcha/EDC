@@ -45,7 +45,9 @@ fun main() {
             }).disposedBy(compositeDisposable)
         }
     } catch (e: IOException) {
-
+        println(e)
+        println(e.message)
+        println("ERROR OCCURED")
     }
 }
 
