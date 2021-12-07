@@ -9,11 +9,11 @@
         },{
             "thingName" : "WFIS_MEAS.RV01",
             "thingDuration" : 30000,
-            "dbName" : "waterQualtiy"
+            "dbName" : "waterQuality"
         },{
             "thingName" : "WFIS_MEAS.RV02",
             "thingDuration" : 30000,
-            "dbName" : "waterQualtiy2"
+            "dbName" : "waterQuality2"
         },{
             "thingName" : "WFIS_MEAS.DF01",
             "thingDuration" : 30000,
