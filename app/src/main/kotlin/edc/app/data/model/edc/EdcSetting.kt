@@ -16,5 +16,8 @@ data class EdcSetting(
     val dbName : String,
 
     @SerializedName("aliasName")
-    val aliasName : String
+    val aliasName : String,
+
+    @SerializedName("attrKey")
+    val attrKey : String
 ) : Serializable

@@ -70,12 +70,12 @@ fun pollingServer(edcThingList : EdcThingList, siteId : String  ) {
 
     edcThingList.thingList.forEach{ setting ->
         rxRepeatTimer(setting.thingDuration * 1L,{
-            fetchEdcData(setting.thingName, siteId, setting.dbName , setting.aliasName)
+            fetchEdcData(setting.thingName, siteId, setting.dbName , setting.aliasName, setting.attrKey )
         }).disposedBy(compositeDisposable)
     }
 }
 
-fun fetchAuthToken( thingName : String , siteId : String , topic : String, alisName : String   ) {
+fun fetchAuthToken( thingName : String , siteId : String , topic : String, alisName : String , attrKey : String   ) {
 
     val body = HashMap<String, String>()
     body["userId"] = USER_ID
@@ -85,23 +85,25 @@ fun fetchAuthToken( thingName : String , siteId : String , topic : String, alisN
         onResponse = {
             AUTH_TOKEN = "UL " + it?.authToken
 
-            fetchEdcData(thingName, siteId, topic, alisName)
+            fetchEdcData(thingName, siteId, topic, alisName, attrKey )
         }
     }
 }
 
-fun fetchEdcData ( thingName : String, siteId : String , topic : String , alisName : String  ) {
+fun fetchEdcData ( thingName : String, siteId : String , topic : String , alisName : String , attrKey : String  ) {
     ApiModule.thingAPI.fetchThingAttrs( siteId , thingName).responseTo {
         onResponse = {
             println(it)
             if ( it == null) {
-                fetchAuthToken(thingName, siteId, topic, alisName )
+                fetchAuthToken(thingName, siteId, topic, alisName ,attrKey )
             }
             else {
                 var data = "NULL_DATA"
 
-                if ( ( it.attrs?.size ?: 0 ) > 0 && (it.attrs?.get(0)?.attrValueList?.size ?: 0 ) > 0 ) {
-                    data = it.attrs?.get(0)?.attrValueList?.get(0)?.attrValue.orEmpty()
+                it.attrs?.forEach { attr ->
+                    if ( attr.attrKey == attrKey ) {
+                        data = attr.attrValueList[0].attrValue
+                    }
                 }
                 insertToKafka(data, topic, alisName )
             }
