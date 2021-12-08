@@ -98,14 +98,13 @@ fun fetchEdcData ( thingName : String, siteId : String , topic : String , alisNa
                 fetchAuthToken(thingName, siteId, topic, alisName ,attrKey )
             }
             else {
-                var data = "NULL_DATA"
 
                 it.attrs?.forEach { attr ->
                     if ( attr.attrKey == attrKey ) {
-                        data = attr.attrValueList[0].attrValue
+                        insertToKafka(attr.attrValueList[0].attrValue, topic, alisName )
                     }
                 }
-                insertToKafka(data, topic, alisName )
+
             }
         }
         onFailure = {
