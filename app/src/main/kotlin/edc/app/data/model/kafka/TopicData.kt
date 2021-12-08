@@ -8,5 +8,8 @@ data class TopicData(
     val data : String,
 
     @SerializedName("aliasName")
-    val aliasName : String
+    val aliasName : String,
+
+    @SerializedName("createdAt")
+    val createdAt : String
 ) : Serializable

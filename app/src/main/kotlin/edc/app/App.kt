@@ -23,6 +23,8 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import java.io.FileReader
 import java.io.IOException
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 private val compositeDisposable = CompositeDisposable()
 
@@ -115,7 +117,11 @@ fun fetchEdcData ( thingName : String, siteId : String , topic : String , alisNa
 
 fun insertToKafka(data : String, topic: String, aliasName : String ) {
 
-    val kafkaRecordRequest = KafkaRecordRequest(records = listOf(KafkaRecord(value = TopicData ( data = data, aliasName = aliasName))))
+    val current = LocalDateTime.now()
+    val formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초")
+    val formattedTime = current.format(formatter)
+
+    val kafkaRecordRequest = KafkaRecordRequest(records = listOf(KafkaRecord(value = TopicData ( data = data, aliasName = aliasName, createdAt = formattedTime))))
 
     ApiModule.kafkaAPI.insertToTopic(
         topic,
