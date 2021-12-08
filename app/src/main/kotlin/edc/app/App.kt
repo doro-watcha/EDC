@@ -94,14 +94,14 @@ fun fetchEdcData ( thingName : String, siteId : String , topic : String , alisNa
     ApiModule.thingAPI.fetchThingAttrs( siteId , thingName).responseTo {
         onResponse = {
             println(it)
-            if ( it?.code == "401") {
+            if ( it == null) {
                 fetchAuthToken(thingName, siteId, topic, alisName )
             }
             else {
                 var data = "NULL_DATA"
 
-                if ( ( it?.attrs?.size ?: 0 ) > 0 && (it?.attrs?.get(0)?.attrValueList?.size ?: 0 ) > 0 ) {
-                    data = it?.attrs?.get(0)?.attrValueList?.get(0)?.attrValue.orEmpty()
+                if ( ( it.attrs?.size ?: 0 ) > 0 && (it.attrs?.get(0)?.attrValueList?.size ?: 0 ) > 0 ) {
+                    data = it.attrs?.get(0)?.attrValueList?.get(0)?.attrValue.orEmpty()
                 }
                 insertToKafka(data, topic, alisName )
             }
