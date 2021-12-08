@@ -12,6 +12,7 @@ import edc.app.data.model.edc.EdcSetting
 import edc.app.data.model.edc.EdcThingList
 import edc.app.data.model.kafka.KafkaRecord
 import edc.app.data.model.kafka.KafkaRecordRequest
+import edc.app.data.model.kafka.TopicData
 import edc.app.util.AppPreference.AUTH_TOKEN
 import edc.app.util.AppPreference.USER_ID
 import edc.app.util.AppPreference.USER_PASSWORD
@@ -63,20 +64,18 @@ fun initToken ( edcThingList : EdcThingList, siteId : String ) {
             pollingServer(edcThingList,siteId)
         }
     }
-
 }
 
-fun pollingServer(edcThingList : EdcThingList, siteId : String ) {
+fun pollingServer(edcThingList : EdcThingList, siteId : String  ) {
 
     edcThingList.thingList.forEach{ setting ->
         rxRepeatTimer(setting.thingDuration * 1L,{
-            fetchEdcData(setting.thingName, siteId, setting.dbName )
+            fetchEdcData(setting.thingName, siteId, setting.dbName , setting.aliasName)
         }).disposedBy(compositeDisposable)
     }
-
 }
 
-fun fetchAuthToken( thingName : String , siteId : String , topic : String  ) {
+fun fetchAuthToken( thingName : String , siteId : String , topic : String, alisName : String   ) {
 
     val body = HashMap<String, String>()
     body["userId"] = USER_ID
@@ -86,17 +85,17 @@ fun fetchAuthToken( thingName : String , siteId : String , topic : String  ) {
         onResponse = {
             AUTH_TOKEN = "UL " + it?.authToken
 
-            fetchEdcData(thingName, siteId, topic)
+            fetchEdcData(thingName, siteId, topic, alisName)
         }
     }
 }
 
-fun fetchEdcData ( thingName : String, siteId : String , topic : String  ) {
+fun fetchEdcData ( thingName : String, siteId : String , topic : String , alisName : String  ) {
     ApiModule.thingAPI.fetchThingAttrs( siteId , thingName).responseTo {
         onResponse = {
             println(it)
             if ( it?.code == "401") {
-                fetchAuthToken(thingName, siteId, topic)
+                fetchAuthToken(thingName, siteId, topic, alisName )
             }
             else {
                 var data = "NULL_DATA"
@@ -104,19 +103,18 @@ fun fetchEdcData ( thingName : String, siteId : String , topic : String  ) {
                 if ( ( it?.attrs?.size ?: 0 ) > 0 && (it?.attrs?.get(0)?.attrValueList?.size ?: 0 ) > 0 ) {
                     data = it?.attrs?.get(0)?.attrValueList?.get(0)?.attrValue.orEmpty()
                 }
-                insertToKafka(data, topic)
+                insertToKafka(data, topic, alisName )
             }
         }
         onFailure = {
             println("FUCK!!!")
         }
     }
-
 }
 
-fun insertToKafka(data : String, topic: String) {
+fun insertToKafka(data : String, topic: String, aliasName : String ) {
 
-    val kafkaRecordRequest = KafkaRecordRequest(records = listOf(KafkaRecord(value = data)))
+    val kafkaRecordRequest = KafkaRecordRequest(records = listOf(KafkaRecord(value = TopicData ( data = data, aliasName = aliasName))))
 
     ApiModule.kafkaAPI.insertToTopic(
         topic,
@@ -128,5 +126,4 @@ fun insertToKafka(data : String, topic: String) {
 
         }
     }
-
 }

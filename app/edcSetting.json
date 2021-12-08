@@ -3,21 +3,10 @@
 	"thingList" : {
         "list" : [
         {
-            "thingName" : "Effel_SmartPole_O.PRT000001",
+            "thingName" : "Blockchain_RTU.RTU_01",
             "thingDuration" : 30000,
-            "dbName" : "smallDust"
-        },{
-            "thingName" : "WFIS_MEAS.RV01",
-            "thingDuration" : 30000,
-            "dbName" : "waterQuality"
-        },{
-            "thingName" : "WFIS_MEAS.RV02",
-            "thingDuration" : 30000,
-            "dbName" : "waterQuality2"
-        },{
-            "thingName" : "WFIS_MEAS.DF01",
-            "thingDuration" : 30000,
-            "dbName" : "waterFountainQuality"
+            "dbName" : "SoilMoisture",
+            "aliasName" : "SM01"
         }
     ]}
 }

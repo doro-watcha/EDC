@@ -13,5 +13,8 @@ data class EdcSetting(
     val thingDuration : Int,
 
     @SerializedName("dbName")
-    val dbName : String
+    val dbName : String,
+
+    @SerializedName("aliasName")
+    val aliasName : String
 ) : Serializable
