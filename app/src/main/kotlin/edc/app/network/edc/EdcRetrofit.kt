@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
 
 object EdcRetrofit {
 
-    private val BASE_URL = "http://210.97.42.250:8088"
+    private val BASE_URL = "https://61.75.178.52:28088"
     private val CONNECT_TIMEOUT = 15L
     private val WRITE_TIMEOUT = 15L
     private val READ_TIMEOUT = 15L
